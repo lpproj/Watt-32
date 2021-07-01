@@ -1019,8 +1019,15 @@ static void DHCP_state_REBOOTING (int event)
  */
 static void W32_CALL dhcp_fsm (void)
 {
+#if defined watt32_verbose
   printf ("In %s(): send_timeout: %lu, state: %s\n",
           __FUNCTION__, DWORD_CAST(send_timeout), state_name());
+#else
+  dbug_printf (
+    "In %s line %u: send_timeout: %lu, state: %s\n",
+    __FILE__, (unsigned)__LINE__, (unsigned long)send_timeout, state_name()
+  );
+#endif
 
   WATT_YIELD();
 

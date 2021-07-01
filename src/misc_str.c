@@ -102,7 +102,27 @@ static int W32_CALL outch (char chr)
   return (1);
 }
 
+#if defined watt32_verbose
 int (W32_CALL *_outch)(char c) = outch;
+#else
+static int outch_dispose(char c)
+{
+  return (int)(unsigned char)c;
+}
+static int outch_firstrun(char c)
+{
+  char *e = getenv("WATT32_OUTCH");
+  int enable_outch = 0;
+  if (e) {
+    while (*e == ' ' || *e == '\t') ++e;
+    enable_outch = atoi(e);
+  }
+  _outch = (enable_outch > 0) ? outch : outch_dispose;
+  return (*_outch)(c);
+}
+
+int (W32_CALL *_outch)(char c) = outch_firstrun;
+#endif
 
 /*---------------------------------------------------*/
 
