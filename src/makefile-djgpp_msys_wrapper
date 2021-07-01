@@ -1,0 +1,33 @@
+#
+# cross-building libwatt for DJGPP on msys2:
+# (make sure of permission of utilities: chmod +x util/win32/*.exe)
+#
+# $ make -C src -f makefile-djgpp_msys_wrapper makefile
+# $ make -C src -f makefile-djgpp_msys_wrapper clean
+# $ make -C src -f makefile-djgpp_msys_wrapper install
+#
+
+prefix = /dev/env/WATT_ROOT
+
+DJ_PREFIX ?= /djgpp/bin/i586-pc-msdosdjgpp-
+#DJ_PREFIX ?= i586-nec98-msdosdjgpp-
+
+W32_BIN2C_ ?= ../util/win32/bin2c.exe
+W32_NASM_ ?= ../util/win32/nasm.exe
+PKT_STUB ?= pkt_stub.h
+
+-include djgpp.mak
+
+nomakefile:
+	@echo "djgpp.mak not exist."
+	@echo "make -f djgpp_msys.mak makefile"
+
+makefile:
+	@echo "Generating DJGPP makefile, directory, errnos and dependencies"
+	../util/win32/mkmake -o djgpp_debug.mak -d build/djgpp makefile.all  DJGPP DEBUG
+	../util/win32/mkmake -o djgpp.mak -d build/djgpp makefile.all  DJGPP RELEASE
+	../util/win32/mkdep -s.o -p\$$\(OBJDIR\)/ *.[ch] > build/djgpp/watt32.dep
+	../util/win32/dj_err -s > build/djgpp/syserr.c
+	../util/win32/dj_err -e > ../inc/sys/djgpp.err
+	@echo "neterr.c: build/djgpp/syserr.c" >> build/djgpp/watt32.dep
+
