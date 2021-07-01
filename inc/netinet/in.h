@@ -140,8 +140,12 @@
 /*
  * Internet address (a structure for historical reasons)
  */
+#ifndef _IN_ADDR_T_DECLARED
+  #define _IN_ADDR_T_DECLARED
+  typedef u_int32_t in_addr_t;
+#endif
 struct in_addr {
-       u_int32_t s_addr;
+       in_addr_t s_addr;
      };
 
 /*
@@ -221,6 +225,10 @@ W32_DATA const struct in6_addr in6addr_loopback;        /* ::1 */
 /*
  * Socket address, internet style.
  */
+#ifndef _IN_PORT_T_DECLARED
+  #define _IN_PORT_T_DECLARED
+  typedef u_short in_port_t;
+#endif
 struct sockaddr_in {
        sa_family_t    sin_family;
        u_short        sin_port;
