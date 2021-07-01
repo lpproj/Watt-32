@@ -373,7 +373,7 @@
 #define __pure
 #endif
 
-#if !defined(__cplusplus)
+#if !defined(__cplusplus) && !defined(WATT32_NO_MINMAX)
   /*
    * min() & max() macros
    */
